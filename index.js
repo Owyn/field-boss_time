@@ -40,9 +40,10 @@ module.exports = function field_boss_time(mod) {
 			let name = getBamName(msg.tokens.npcname);
 			command.message("Field Boss " + name.clr("56B4E9") + " was " + "killed".clr("DC143C") + " by " + msg.tokens.userName);
 			let now = new Date();
-			var nextTime = new Date(now.getTime() + 5*60*60000); // in 5 hours
-			bams[name] = "Respawns on " + (addZero(nextTime.getHours()) + ":" + addZero(nextTime.getMinutes())).clr("E69F00");
-			console.log(name + ": " + bams[name]);
+			let nextTime = new Date(now.getTime() + 5*60*60000); // in 5 hours
+			let nextTimeHuman = addZero(nextTime.getHours()) + ":" + addZero(nextTime.getMinutes());
+			bams[name] = "Respawns on " + nextTimeHuman.clr("E69F00");
+			console.log(name + ": " + "Respawns on: " + nextTimeHuman);
 			command.message(name + ": " + bams[name]);
 		}
 	});
