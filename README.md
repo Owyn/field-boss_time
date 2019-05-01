@@ -9,8 +9,6 @@ Calculates and tracks next respawn time for field boss BAMs: Ortan, Cerrus, Haza
 
 - you need to witness the system message about field boss death to calculate next respawn time
 
-- information will be reset when you exit game-server completely (character reselection is ok)
-
 
 # Commands
 

@@ -1,20 +1,21 @@
 String.prototype.clr = function (hexColor) { return `<font color='#${hexColor}'>${this}</font>` };
 
+const	fs = require('fs');
+
 module.exports = function field_boss_time(mod) {
 	
 	const command = mod.command;
 	
-	var bams = {Ortan: "?",
-				Cerrus: "?",
-				Hazard : "?"};
+	var bams = require('./saved.json'),
+		changed = false;
 				
 	function getBamName(id)
 	{
 		switch (id)
 		{
 			case "@creature:26#5001": return "Ortan";
-			case "@creature:26#4001": return "Cerrus";
-			case "@creature:26#501": return "Hazard";
+			case "@creature:51#4001": return "Cerrus";
+			case "@creature:39#501": return "Hazard";
 			default: return "John Cena";
 		}
 	}
@@ -27,16 +28,46 @@ module.exports = function field_boss_time(mod) {
 		return i;
 	}
 	
+	function saveJson(obj)
+	{
+		if (Object.keys(obj).length && changed)
+		{
+			try
+			{
+				fs.writeFileSync('./saved.json', JSON.stringify(obj, null, "\t"));
+				changed = false;
+			}
+			catch (err)
+			{
+				console.log(err);
+				return false;
+			}
+		}
+	}
+			
+	process.on('exit', ()=> {
+		console.log('Saving field-boss times to the save file...');
+		saveJson(bams);
+	});
+	
+	this.destructor = function() {
+		saveJson(bams);
+	}
+	
 	mod.hook('S_SYSTEM_MESSAGE', 1, event => {		
 		const msg = mod.parseSystemMessage(event.message);
 		if(msg.id === 'SMT_FIELDBOSS_APPEAR')
 		{
+			console.log(msg);
+			changed = true;
 			let name = getBamName(msg.tokens.npcName);
 			bams[name] = "Alive".clr("32CD32");
 			command.message("Field Boss " + name.clr("56B4E9") + " appeared".clr("32CD32"));
 		}
 		else if(msg.id === 'SMT_FIELDBOSS_DIE_GUILD' || msg.id === 'SMT_FIELDBOSS_DIE_NOGUILD')
 		{
+			console.log(msg);
+			changed = true;
 			let name = getBamName(msg.tokens.npcname);
 			command.message("Field Boss " + name.clr("56B4E9") + " was " + "killed".clr("DC143C") + " by " + msg.tokens.userName);
 			let now = new Date();
