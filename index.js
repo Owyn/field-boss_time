@@ -51,6 +51,7 @@ module.exports = function field_boss_time(mod) {
 	});
 	
 	this.destructor = function() {
+		console.log('Destructor: Saving field-boss times to the save file...');
 		saveJson(bams);
 	}
 	
@@ -76,6 +77,7 @@ module.exports = function field_boss_time(mod) {
 			bams[name] = "Respawns on " + nextTimeHuman.clr("E69F00");
 			console.log(name + ": " + "Respawns on: " + nextTimeHuman);
 			command.message(name + ": " + bams[name]);
+			saveJson(bams);
 		}
 	});
 
