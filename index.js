@@ -58,7 +58,7 @@ module.exports = function field_boss_time(mod) {
 		const msg = mod.parseSystemMessage(event.message);
 		if(msg.id === 'SMT_FIELDBOSS_APPEAR')
 		{
-			console.log(msg);
+			//console.log(msg);
 			changed = true;
 			let name = getBamName(msg.tokens.npcName);
 			bams[name] = "Alive".clr("32CD32");
@@ -66,7 +66,7 @@ module.exports = function field_boss_time(mod) {
 		}
 		else if(msg.id === 'SMT_FIELDBOSS_DIE_GUILD' || msg.id === 'SMT_FIELDBOSS_DIE_NOGUILD')
 		{
-			console.log(msg);
+			//console.log(msg);
 			changed = true;
 			let name = getBamName(msg.tokens.npcname);
 			command.message("Field Boss " + name.clr("56B4E9") + " was " + "killed".clr("DC143C") + " by " + msg.tokens.userName);
