@@ -1,6 +1,7 @@
 String.prototype.clr = function (hexColor) { return `<font color='#${hexColor}'>${this}</font>` };
 
-const	fs = require('fs');
+const	fs = require('fs'),
+		path = require('path');
 
 module.exports = function field_boss_time(mod) {
 	
@@ -34,7 +35,7 @@ module.exports = function field_boss_time(mod) {
 		{
 			try
 			{
-				fs.writeFileSync('./saved.json', JSON.stringify(obj, null, "\t"));
+				fs.writeFileSync(path.join(__dirname,'./saved.json'), JSON.stringify(obj, null, "\t"));
 				changed = false;
 			}
 			catch (err)
@@ -77,7 +78,6 @@ module.exports = function field_boss_time(mod) {
 			bams[name] = "Respawns on " + nextTimeHuman.clr("E69F00");
 			console.log(name + ": " + "Respawns on: " + nextTimeHuman);
 			command.message(name + ": " + bams[name]);
-			saveJson(bams);
 		}
 	});
 
