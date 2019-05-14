@@ -7,6 +7,8 @@ module.exports = function field_boss_time(mod) {
 	
 	const command = mod.command;
 	
+	const thirty_minutes = 30 * 60 * 1000;
+	
 	var bams = require('./saved.json'),
 		changed = false;
 				
@@ -66,24 +68,35 @@ module.exports = function field_boss_time(mod) {
 			bams[name] = "Alive".clr("32CD32");
 			command.message("Field Boss " + name.clr("56B4E9") + " appeared".clr("32CD32"));
 		}
-		else if(msg.id === 'SMT_FIELDBOSS_DIE_GUILD' || msg.id === 'SMT_FIELDBOSS_DIE_NOGUILD')
+		else if(msg.id === 'SMT_FIELDBOSS_DIE_GUILD' || msg.id === 'SMT_FIELDBOSS_DIE_NOGUILD')	
 		{
 			//console.log(msg);
 			changed = true;
 			let name = getBamName(msg.tokens.npcname);
-			command.message("Field Boss " + name.clr("56B4E9") + " was " + "killed".clr("DC143C") + " by " + msg.tokens.userName);
-			let now = new Date();
-			let nextTime = new Date(now.getTime() + 5*60*60000); // in 5 hours
-			let nextTimeHuman = addZero(nextTime.getHours()) + ":" + addZero(nextTime.getMinutes());
-			bams[name] = "Respawns on " + nextTimeHuman.clr("E69F00");
-			console.log(name + ": " + "Respawns on: " + nextTimeHuman);
-			command.message(name + ": " + bams[name]);
+			command.message("Field Boss " + name.clr("56B4E9") + " was " + "killed".clr("DC143C") + " by " + msg.tokens.userName.clr("FDD017"));
+			bams[name] = Date.now() + 5*60*60000 + (30 * 60 * 1000);
+			command.message(name + ": " + makeText(bams[name]));
 		}
 	});
+	
+	function makeText(date)
+	{
+		if(isNaN(date))
+		{
+			return date;
+		}
+		if(date < Date.now())
+		{
+			return "?";
+		}
+		let startT = new Date(date - (60 * 60 * 1000));
+		let endT = new Date(date);
+		return "Respawns on " + (addZero(startT.getHours()) + ":" + addZero(startT.getMinutes())).clr("E69F00") + " - " + (addZero(endT.getHours()) + ":" + addZero(endT.getMinutes())).clr("E69F00");
+	}
 
 	command.add('bamtime', () => {
-		command.message("Ortan: ".clr("56B4E9") + bams.Ortan);
-		command.message("Cerrus: ".clr("56B4E9") + bams.Cerrus);
-		command.message("Hazard: ".clr("56B4E9") + bams.Hazard);
+		command.message("Ortan: ".clr("56B4E9") + makeText(bams.Ortan));
+		command.message("Cerrus: ".clr("56B4E9") + makeText(bams.Cerrus));
+		command.message("Hazard: ".clr("56B4E9") + makeText(bams.Hazard));
 	})
 }
