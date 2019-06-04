@@ -7,8 +7,6 @@ module.exports = function field_boss_time(mod) {
 	
 	const command = mod.command;
 	
-	const thirty_minutes = 30 * 60 * 1000;
-	
 	var bams = require('./saved.json'),
 		changed = false;
 				
@@ -35,6 +33,7 @@ module.exports = function field_boss_time(mod) {
 	{
 		if (Object.keys(obj).length && changed)
 		{
+			console.log('Saving field-boss times to the save file...');
 			try
 			{
 				fs.writeFileSync(path.join(__dirname,'./saved.json'), JSON.stringify(obj, null, "\t"));
@@ -47,14 +46,8 @@ module.exports = function field_boss_time(mod) {
 			}
 		}
 	}
-			
-	process.on('exit', ()=> {
-		console.log('Saving field-boss times to the save file...');
-		saveJson(bams);
-	});
 	
 	this.destructor = function() {
-		console.log('Destructor: Saving field-boss times to the save file...');
 		saveJson(bams);
 	}
 	
